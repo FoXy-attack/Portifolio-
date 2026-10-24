@@ -739,6 +739,7 @@ footer a{color:var(--acc);text-decoration:none}
 
   // ---------- faíscas (abertura e cliques) ----------
   var fc=document.getElementById('faisca'),fx=fc.getContext('2d'),parts=[],ondas=[],rodando=false,dpr=Math.min(window.devicePixelRatio||1,2);
+  function limpaFx(){fx.save();fx.setTransform(1,0,0,1,0,0);fx.clearRect(0,0,fc.width,fc.height);fx.restore();}
   function tamFx(){fc.width=innerWidth*dpr;fc.height=innerHeight*dpr;fx.setTransform(dpr,0,0,dpr,0,0);}
   tamFx();window.addEventListener('resize',tamFx);
   var CORES=['#5BE3A0','#5BE3A0','#25D366','#FFFFFF','#B8F5D4'];
@@ -749,14 +750,14 @@ footer a{color:var(--acc);text-decoration:none}
     if(!rodando){rodando=true;requestAnimationFrame(loopFx);}
   }
   function loopFx(){
-    fx.clearRect(0,0,innerWidth,innerHeight);fx.globalCompositeOperation='lighter';
+    limpaFx();fx.globalCompositeOperation='lighter';
     ondas=ondas.filter(function(o){o.r+=o.v;o.v*=.97;o.a-=.022;if(o.a<=0)return false;
       fx.beginPath();fx.arc(o.x,o.y,o.r,0,Math.PI*2);fx.strokeStyle='rgba(91,227,160,'+o.a+')';fx.lineWidth=3*o.a+1;fx.stroke();return true;});
     parts=parts.filter(function(p){p.x+=p.vx;p.y+=p.vy;p.vx*=.955;p.vy=p.vy*.955+.06;p.vida-=p.dec;if(p.vida<=0)return false;
       fx.globalAlpha=p.vida;fx.fillStyle=p.c;fx.beginPath();fx.arc(p.x,p.y,p.r,0,Math.PI*2);fx.fill();
       fx.globalAlpha=p.vida*.25;fx.beginPath();fx.arc(p.x,p.y,p.r*3,0,Math.PI*2);fx.fill();return true;});
     fx.globalAlpha=1;fx.globalCompositeOperation='source-over';
-    if(parts.length||ondas.length) requestAnimationFrame(loopFx); else {fx.clearRect(0,0,innerWidth,innerHeight);rodando=false;}
+    if(parts.length||ondas.length) requestAnimationFrame(loopFx); else {limpaFx();rodando=false;}
   }
   if(!reduz) document.addEventListener('click',function(e){var b=e.target.closest('.btn,.pontos button,.cores button,.abas button,.passo button');if(b) explodir(e.clientX,e.clientY,26,6,5);});
 
@@ -791,7 +792,7 @@ footer a{color:var(--acc);text-decoration:none}
     function desenhaIntro(agora){
       if(estourou)return;
       var t=(agora-t0)/1000;
-      fx.clearRect(0,0,innerWidth,innerHeight);
+      limpaFx();
       for(var i=0;i<pts.length;i++){var p=pts[i];
         var k=Math.max(0,Math.min(1,(t-p.d)/1.25)),e=k===1?1:1-Math.pow(2,-10*k);
         var bx=p.sx+(p.tx-p.sx)*e,by=p.sy+(p.ty-p.sy)*e;
