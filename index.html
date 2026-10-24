@@ -764,7 +764,7 @@ footer a{color:var(--acc);text-decoration:none}
   var iniciou=false;
   function iniciar(){if(iniciou)return;iniciou=true;document.documentElement.classList.add('carregou');document.body.classList.add('carregou');ligarRevelar();}
   var ab=document.getElementById('abertura');
-  var jaViu=false;try{var vis=+localStorage.getItem('rc-abertura')||0;jaViu=Date.now()-vis<7*864e5;}catch(e){}
+  var jaViu=false;
   if(reduz||!ab||jaViu){if(ab)ab.remove();iniciar();}
   else{
     document.documentElement.style.overflow='hidden';
@@ -813,7 +813,6 @@ footer a{color:var(--acc);text-decoration:none}
       setTimeout(function(){ab.classList.add('abre');setTimeout(iniciar,250);},120);
       setTimeout(terminar,1400);
     }
-    try{localStorage.setItem('rc-abertura',String(Date.now()));}catch(e){}
     function terminar(){if(fim)return;fim=true;document.documentElement.style.overflow='';ab.remove();iniciar();}
     ab.addEventListener('pointermove',function(e){ptr.x=e.clientX;ptr.y=e.clientY;});
     ab.addEventListener('touchmove',function(e){var q=e.touches[0];ptr.x=q.clientX;ptr.y=q.clientY;},{passive:true});
